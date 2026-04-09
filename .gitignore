@@ -1,0 +1,18 @@
+# Build output
+build/
+out/
+
+# Geode packages and generated files
+*.geode
+*.zip
+geode-deps/
+
+# Local editor and OS files
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.swp
+Thumbs.db
+Desktop.ini

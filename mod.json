@@ -1,0 +1,17 @@
+{
+    "geode": "5.4.1",
+    "gd": {
+        "win": "2.2081",
+        "mac": "2.2081",
+        "android": "2.2081",
+        "ios": "2.2081"
+    },
+    "id": "rob.fpcounter",
+    "name": "fpcounter",
+    "version": "v1.0.0",
+    "developer": "rob",
+    "description": "A Geometry Dash FPS counter mod.",
+    "tags": [
+        "utility"
+    ]
+}
