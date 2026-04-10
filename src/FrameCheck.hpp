@@ -1,8 +1,7 @@
 #pragma once
 
-#include <Geode/Geode.hpp>
-
 #include <filesystem>
+#include <string>
 
 class GJBaseGameLayer;
 class PlayLayer;
@@ -14,16 +13,13 @@ namespace framecheck {
     void onLevelEnter(PlayLayer* layer);
     void onLevelExit(PlayLayer* layer);
     void onAttemptReset(PlayLayer* layer);
+
     bool loadMacroFile(std::filesystem::path const& path);
-    bool analyzeCurrentMacro();
     std::filesystem::path currentMacroPath();
 
+    void beforeProcessCommands(GJBaseGameLayer* layer, float dt, bool isHalfTick, bool isLastTick);
     void afterProcessCommands(GJBaseGameLayer* layer, float dt, bool isHalfTick, bool isLastTick);
-    void beforeHandleButton(GJBaseGameLayer* layer, bool down, int button, bool isPlayer1);
-    void tickAnalysisFromUI();
 
     std::string recentDebugLogText();
-    std::string recentAnalysisLogText();
     std::string recentFrameWindowText();
-    bool isSimulating();
 }

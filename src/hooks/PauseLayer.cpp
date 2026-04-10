@@ -22,24 +22,6 @@ using namespace geode::prelude;
 namespace {
     std::chrono::steady_clock::time_point s_pickerSuppressedUntil {};
 
-    class FrameCheckPauseTicker final : public cocos2d::CCNode {
-    public:
-        static FrameCheckPauseTicker* create() {
-            auto* node = new FrameCheckPauseTicker();
-            if (node && node->init()) {
-                node->autorelease();
-                node->scheduleUpdate();
-                return node;
-            }
-            delete node;
-            return nullptr;
-        }
-
-        void update(float) override {
-            framecheck::tickAnalysisFromUI();
-        }
-    };
-
     bool copyText(std::string const& text, char const* successMessage, char const* failMessage) {
         if (!geode::utils::clipboard::write(text)) {
             Notification::create(failMessage, NotificationIcon::Warning)->show();
@@ -123,14 +105,6 @@ class $modify(FrameCheckPauseLayer, PauseLayer) {
         copyFrameCheckLogs();
     }
 
-    void onCopyFrameCheckAnalysis(cocos2d::CCObject*) {
-        copyText(
-            framecheck::recentAnalysisLogText(),
-            "FrameCheck analysis copied",
-            "Could not copy analysis"
-        );
-    }
-
     void onPickFrameCheckMacro(cocos2d::CCObject*) {
         auto now = std::chrono::steady_clock::now();
         if (now < s_pickerSuppressedUntil) {
@@ -154,24 +128,11 @@ class $modify(FrameCheckPauseLayer, PauseLayer) {
             return;
         }
 
-        Notification::create("GDR2 loaded", NotificationIcon::Success)->show();
-    }
-
-    void onAnalyzeFrameCheck(cocos2d::CCObject*) {
-        auto ok = framecheck::analyzeCurrentMacro();
-        Notification::create(
-            ok ? "FrameCheck analysis queued" : "FrameCheck analysis failed",
-            ok ? NotificationIcon::Info : NotificationIcon::Error
-        )->show();
+        Notification::create("GDR2 macro enabled", NotificationIcon::Success)->show();
     }
 
     void customSetup() {
         PauseLayer::customSetup();
-
-        if (auto* ticker = FrameCheckPauseTicker::create()) {
-            ticker->setID("framecheck-pause-analysis-ticker"_spr);
-            this->addChild(ticker);
-        }
 
         auto* menu = cocos2d::CCMenu::create();
         menu->setPosition(cocos2d::CCPointZero);
@@ -202,18 +163,6 @@ class $modify(FrameCheckPauseLayer, PauseLayer) {
         copyButton->setPosition({48.f, 80.f});
         menu->addChild(copyButton);
 
-        auto* copyAnalysisSprite = ButtonSprite::create("Copy Analysis", "goldFont.fnt", "GJ_button_02.png", 0.48f);
-        copyAnalysisSprite->setScale(0.62f);
-
-        auto* copyAnalysisButton = CCMenuItemSpriteExtra::create(
-            copyAnalysisSprite,
-            this,
-            menu_selector(FrameCheckPauseLayer::onCopyFrameCheckAnalysis)
-        );
-        copyAnalysisButton->setID("framecheck-copy-analysis-button"_spr);
-        copyAnalysisButton->setPosition({48.f, 108.f});
-        menu->addChild(copyAnalysisButton);
-
         auto* pickSprite = ButtonSprite::create("Pick GDR2", "goldFont.fnt", "GJ_button_04.png", 0.56f);
         pickSprite->setScale(0.66f);
 
@@ -223,19 +172,7 @@ class $modify(FrameCheckPauseLayer, PauseLayer) {
             menu_selector(FrameCheckPauseLayer::onPickFrameCheckMacro)
         );
         pickButton->setID("framecheck-pick-macro-button"_spr);
-        pickButton->setPosition({48.f, 136.f});
+        pickButton->setPosition({48.f, 108.f});
         menu->addChild(pickButton);
-
-        auto* analyzeSprite = ButtonSprite::create("Analyze FC", "goldFont.fnt", "GJ_button_01.png", 0.58f);
-        analyzeSprite->setScale(0.72f);
-
-        auto* analyzeButton = CCMenuItemSpriteExtra::create(
-            analyzeSprite,
-            this,
-            menu_selector(FrameCheckPauseLayer::onAnalyzeFrameCheck)
-        );
-        analyzeButton->setID("framecheck-analyze-button"_spr);
-        analyzeButton->setPosition({48.f, 164.f});
-        menu->addChild(analyzeButton);
     }
 };

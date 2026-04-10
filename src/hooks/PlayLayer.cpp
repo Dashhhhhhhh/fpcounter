@@ -20,24 +20,12 @@ class $modify(FrameCheckPlayLayer, PlayLayer) {
     }
 
     void resetLevel() {
-        framecheck::onAttemptReset(this);
         PlayLayer::resetLevel();
+        framecheck::onAttemptReset(this);
     }
 
     void onExit() {
         framecheck::onLevelExit(this);
         PlayLayer::onExit();
-    }
-
-    void destroyPlayer(PlayerObject* player, GameObject* object) {
-        if (framecheck::isSimulating()) {
-            if (player) {
-                player->m_isDead = true;
-            }
-            this->m_playerDied = true;
-            return;
-        }
-
-        PlayLayer::destroyPlayer(player, object);
     }
 };
