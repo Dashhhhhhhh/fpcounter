@@ -10,7 +10,7 @@
     "name": "fpcounter",
     "version": "v1.0.0",
     "developer": "rob",
-    "description": "A Geometry Dash FPS counter mod.",
+    "description": "Debug prototype for GDR2 macro frame-window checking.",
     "tags": [
         "utility"
     ]
